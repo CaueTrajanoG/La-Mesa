@@ -1,59 +1,67 @@
-# LaMesa
+<div align="center">
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+# 🍽️ **LaMesa**
+### _Gerencie e compartilhe suas refeições com estilo!_  
 
-## Development server
+🚧 **Status:** Em desenvolvimento 🚧  
+📅 **Início:** Novembro de 2025  
 
-To start a local development server, run:
+---
 
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node-dot-js&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github)
+
+</div>
+
+---
+
+## 📖 **Sobre o projeto**
+**LaMesa** é um aplicativo web desenvolvido em Angular com o objetivo de facilitar o gerenciamento de refeições, cardápios e rotinas alimentares — seja para uso pessoal, em equipe ou para pequenos estabelecimentos.
+
+O foco está em uma **interface intuitiva**, **design moderno** (via TailwindCSS) e uma **arquitetura escalável** para futuras integrações.
+
+---
+
+## 🎯 **Objetivos principais**
+- Criar uma interface interativa e responsiva;
+- Permitir cadastro e edição de refeições (CRUD completo);
+- Gerenciar listas e categorias de pratos;
+- Implementar drag-and-drop para organização dos itens;
+- Integrar com armazenamento local e futuramente com API externa.
+
+---
+
+## 🧩 **Tecnologias**
+| Categoria | Tecnologias |
+|------------|--------------|
+| **Frontend** | Angular 18, TypeScript, TailwindCSS |
+| **Backend (futuro)** | Node.js, Express |
+| **Controle de versão** | Git & GitHub |
+| **Ferramentas auxiliares** | VSCode, Figma, Postman |
+
+---
+
+## 👥 **Equipe**
+| Nome | Contato |
+|------|---------|----------|
+| **Caue Trajano** |  [LinkedIn](https://www.linkedin.com/in/cauetrajano) [Email](mailto:caue.sw@gmail.com) |
+| **Pedro Arthur** | [LinkedIn](#) • [Email](pedro.arthurnery11@gmail.com) |
+
+---
+
+## 🧠 **Como rodar o projeto localmente**
 ```bash
+# Clone o repositório
+git clone https://github.com/CaueTrajanoG/LaMesa.git
+
+# Entre na pasta do projeto
+cd LaMesa
+
+# Instale as dependências
+npm install
+
+# Execute o servidor de desenvolvimento
 ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
