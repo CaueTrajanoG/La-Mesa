@@ -1,139 +1,32 @@
-<!-- Header -->
-<header class="header">
-  <div class="header-content">
-    <div class="logo">
-      <span>🍽️</span>
-      <h1>La Mesa</h1>
-    </div>
-    <nav class="nav">
-      <a href="#" class="nav-link active">Dashboard</a>
-      <a href="#" class="nav-link">Mesas</a>
-      <a href="#" class="nav-link">Pedidos</a>
-    </nav>
-  </div>
-</header>
-
-<!-- Main Content -->
-<div class="main-container">
-  <main class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h2>Filtros</h2>
-      <div class="filter-buttons">
-        <button 
-          class="filter-btn" 
-          [class.active]="activeFilter === 'all'"
-          (click)="onFilterChange('all')">
-          Todas
-        </button>
-        <button 
-          class="filter-btn" 
-          [class.active]="activeFilter === 'occupied'"
-          (click)="onFilterChange('occupied')">
-          Ocupadas
-        </button>
-        <button 
-          class="filter-btn" 
-          [class.active]="activeFilter === 'free'"
-          (click)="onFilterChange('free')">
-          Livres
-        </button>
-      </div>
-      
-      <div class="legend">
-        <h3>Legenda</h3>
-        <div class="legend-item">
-          <span class="status-dot occupied"></span>
-          <span>Ocupada</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <span>🍽️</span>
+          <h1>La Mesa</h1>
         </div>
-        <div class="legend-item">
-          <span class="status-dot free"></span>
-          <span>Livre</span>
-        </div>
+        <nav class="nav">
+          <a href="#" class="nav-link active">Dashboard</a>
+          <a href="#" class="nav-link">Mesas</a>
+          <a href="#" class="nav-link">Pedidos</a>
+        </nav>
       </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <section class="main-content">
-      <div class="content-header">
-        <h2>Mesas do Restaurante</h2>
-        <span class="subtitle">Gerencie ocupação e pedidos</span>
-      </div>
-      
-      <!-- Grid de Mesas - Versão temporária sem components -->
-      <div class="tables-grid">
-        @for (table of tables; track table.id) {
-          <div class="table-card">
-            <div class="table-header">
-              <div class="table-number">Mesa {{ table.name }}</div>
-              <div class="table-status">
-                <span [class]="'status-dot ' + (table.occupied ? 'occupied' : 'free')"></span>
-                <span>{{ table.occupied ? 'Ocupada' : 'Livre' }}</span>
-              </div>
-            </div>
-            <div class="table-actions">
-              <button class="btn btn-primary btn-small" (click)="onViewOrders(table.id)">
-                Ver Pedidos
-              </button>
-              <button class="btn btn-secondary btn-small" (click)="onToggleStatus(table.id)">
-                {{ table.occupied ? 'Marcar Livre' : 'Marcar Ocupada' }}
-              </button>
-            </div>
-          </div>
-        }
-      </div>
-    </section>
-  </main>
-</div>
-
-@if (showOrdersModal) {
-  <div class="modal-overlay" (click)="onCloseOrdersModal()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>Pedidos - Mesa {{ selectedTable?.name }}</h2>
-        <button class="close-btn" (click)="onCloseOrdersModal()">×</button>
-      </div>
-      
-      <div class="modal-body">
-        <div class="orders-list">
-          <div class="no-orders">Modal de Pedidos - Em desenvolvimento</div>
-        </div>
-        
-        <div class="modal-footer">
-          <button class="btn btn-primary" (click)="onPayBill(selectedTable?.id)">
-            Fechar Conta
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-}
-
-@if (showPaymentModal) {
-  <div class="modal-overlay" (click)="onClosePaymentModal()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>Fechamento da Mesa {{ selectedTable?.name }}</h2>
-        <button class="close-btn" (click)="onClosePaymentModal()">×</button>
-      </div>
-      
-      <div class="modal-body">
-        <div class="orders-list">
-          <div class="no-orders">Modal de Pagamento - Em desenvolvimento</div>
-        </div>
-        
-        <div class="modal-footer">
-          <button class="btn btn-primary" (click)="onGeneratePayment(selectedTable?.id)">
-            Gerar Pagamento
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-}
+    </header>
+    <home></home>
+    
+</body>
 
 <footer class="footer">
   <div class="footer-content">
     <p>&copy; 2024 La Mesa - Sistema de Gerenciamento de Restaurante</p>
   </div>
 </footer>
+
+</html>
