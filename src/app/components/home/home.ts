@@ -11,6 +11,7 @@ interface Produto {
 }
 
 
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -19,12 +20,14 @@ interface Produto {
   styleUrls: ['./home.css']
 })
 
+
 export class HomeComponent {
   currentPage: string = 'home';
   modalAberto: boolean = false;
   modalPagamentoAberto: boolean = false;
   total: number = 0;
   comandaEditando: Comanda | null = null;
+
 
 
   
@@ -51,9 +54,6 @@ export class HomeComponent {
     this.limparFormulario();
     this.modalAberto = true;
   }
-
-
-
 
   fecharModal() {
     this.modalAberto = false;
