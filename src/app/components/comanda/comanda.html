@@ -1,3 +1,35 @@
-<div class="mb-4 p-3 border border-slate-300 rounded-lg shadow-sm bg-slate-100 hover:bg-slate-300 transition cursor-move  ">
+<div class="bg-white rounded-2xl shadow-lg border-2 border-amber-200 p-6 hover:shadow-xl transition duration-200">
+  <!-- card da  comanda -->
+  <div class="flex justify-between items-start mb-4">
+    <h3 class="text-2xl font-bold text-amber-800 font-serif">
+      Comanda {{ comanda.numero.toString().padStart(2, '0') }}
+    </h3>
+    <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-semibold">
+      R$ {{ comanda.total.toFixed(2) }}
+    </span>
+  </div>
 
+  
+  <div class="mb-6">
+    <p class="text-amber-700 text-sm mb-2 font-semibold">Produtos:</p>
+    <p class="text-amber-600 text-sm">{{ getProdutosTexto() }}</p>
+  </div>
+
+  
+  <div class="flex space-x-3">
+    <button 
+      (click)="editarComanda()"
+      class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded-xl transition duration-200 text-sm flex items-center justify-center"
+    >
+      <i class="mr-2"></i>
+      Editar
+    </button>
+    <button 
+      (click)="abrirPagamento()"
+      class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-xl transition duration-200 text-sm flex items-center justify-center"
+    >
+      <i class="mr-2"></i>
+      Pagamento
+    </button>
+  </div>
 </div>
