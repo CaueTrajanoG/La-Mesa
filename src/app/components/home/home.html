@@ -8,13 +8,17 @@
     <div class="orders-list">
       @for (order of allOrders(); track order.id) {
         <div class="order-card">
-          <h3>Comanda #{{ order.id }}</h3>
-          <p>Cliente: {{ order.numero }}</p>git
+          <p>Numero:  {{ order.numero }}</p>
           <p>Total itens: {{ order.products }}</p>
         </div>
       }      
     </div>
-
+    <div>
+      @for (product of allProducts(); track product.id) {
+        <p>Produto:  {{ product.name }}</p>
+        <p>Preco:  {{ product.price }}</p>
+      }
+    </div>
     </section>
   </main>
 </div>

@@ -23,6 +23,7 @@ export interface Order {
 export class ApiClient {
   private apiClient = inject(HttpClient);
   private readonly _apiUrl = 'https://lfvjoiwqvgvcvljfyngk.supabase.co/rest/v1/Orders'
+  private readonly productURL = 'https://lfvjoiwqvgvcvljfyngk.supabase.co/rest/v1/Products'
   private readonly _apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmdmpvaXdxdmd2Y3ZsamZ5bmdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4Mzk5MjMsImV4cCI6MjA3OTQxNTkyM30.eaPFsTY7GtBB0i3tqlNKP8u_atngnKsL_PyfY7e5BVw'
   
   private headers(){
@@ -37,6 +38,14 @@ export class ApiClient {
   //GEt
   getOrders(): Observable<Order[]>{
     return this.apiClient.get<Order[]>(this._apiUrl,
+      {
+        headers: this.headers()
+      }).pipe(
+        catchError(this.handleError)
+      )
+  }
+  getProducts(): Observable<Product[]>{
+    return this.apiClient.get<Product[]>(this.productURL,
       {
         headers: this.headers()
       }).pipe(
