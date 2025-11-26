@@ -13,11 +13,11 @@ Authorization: Bearer {{ apiKey }}
 Content-Type: application/json
 
 {
-    "title": "Projeto Etapa I",
-    "due": "2025-11-15",
-    "level": "high",
-    "description": "Projeto prioritário de angular!",
-    "status": "todo"
+    "numero": 3,
+    "products": [{
+        "id":1,
+        "quantity":3 
+        }]
 }
 
 ### PATCH

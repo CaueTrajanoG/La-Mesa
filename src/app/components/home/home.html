@@ -1,16 +1,18 @@
 <div class="main-container">
   <main class="app">
     <!-- Main Content Area -->
-    <section class="main-content">      
+    <section class="main-content">       
+      <button class="w-10 h-10 rounded-xl pb-1 bg-indigo-500 text-white flex items-center justify-center text-3xl hover:bg-indigo-700 cursor-pointer"
+        (click)="postOrder()">+</button>     
       <!-- Grid de Mesas - Versão temporária sem components -->
     <div class="orders-list">
       @for (order of allOrders(); track order.id) {
         <div class="order-card">
           <h3>Comanda #{{ order.id }}</h3>
-          <p>Cliente: {{ order.numero }}</p>
+          <p>Cliente: {{ order.numero }}</p>git
           <p>Total itens: {{ order.products }}</p>
         </div>
-      }
+      }      
     </div>
 
     </section>
