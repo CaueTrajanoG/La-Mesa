@@ -13,6 +13,7 @@ export class Home {
   protected data = inject(ApiClient);
   //contém todas as comandas abertas
   allOrders = signal<Order[]>([]); 
+  allProducts = signal<Product[]>([]); 
 
   //esse método é executado sempre que o projeto é iniciado
   ngOnInit(){
@@ -24,6 +25,10 @@ export class Home {
       next: (orders) => this.allOrders.set(orders),
       error: (err) => console.error('Erro ao carregar orders:', err)
     });
+    this.data.getProducts().subscribe({
+      next: (products) => this.allProducts.set(products),
+      error: (err) => console.error('Erro ao carregar produtos:', err)      
+    })
   }
 
   //por enquanto está enviando essa order para o sb,mas depois
