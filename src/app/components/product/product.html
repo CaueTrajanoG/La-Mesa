@@ -1,1 +1,120 @@
-<p>product works!</p>
+<div class="min-h-screen bg-amber-50 p-6">
+  <div class="max-w-6xl mx-auto">
+    
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-amber-900 font-serif">Produtos</h1>
+      <p class="text-amber-700">Gerencie o cardápio do restaurante</p>
+    </div>
+
+    <!-- botao da parte de adicionar produto -->
+    <div class="text-center mb-8">
+      <button 
+        (click)="abrirModal()"
+        class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200 shadow-lg"
+      >
+         Adicionar Produto
+      </button>
+    </div>
+
+    <!-- produtos em lista -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div *ngFor="let produto of produtos" 
+           class="bg-white rounded-2xl shadow-md border-2 border-amber-200 p-6 hover:shadow-lg transition duration-200">
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-xl font-bold text-amber-800">{{ produto.nome }}</h3>
+          <div class="flex space-x-2">
+            <button 
+              (click)="editarProduto(produto)"
+              class="text-amber-600 hover:text-amber-800 text-sm"
+              title="Editar"
+            >
+              
+            </button>
+            <button 
+              (click)="removerProduto(produto.id)"
+              class="text-red-500 hover:text-red-700 text-sm"
+              title="Remover"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
+        <p class="text-2xl font-bold text-amber-700">R$ {{ produto.preco.toFixed(2) }}</p>
+      </div>
+    </div>
+
+    <!-- caso não haja produtos, mensagem aparece -->
+    <div *ngIf="produtos.length === 0" class="text-center py-12">
+      <div class="bg-white rounded-2xl shadow-lg p-12 border-2 border-amber-200">
+        <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <span class="text-3xl text-amber-600"></span>
+        </div>
+        <h3 class="text-2xl font-semibold text-amber-800 mb-3">
+          Nenhum Produto
+        </h3>
+        <p class="text-amber-600">
+          Adicione produtos ao cardápio
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Adicionar/Editar Produto -->
+  <div *ngIf="modalAberto" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="fixed inset-0 bg-black bg-opacity-10" (click)="fecharModal()"></div>
+    
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md border-2 border-amber-300">
+      <!-- Cabeçalho do Modal -->
+      <div class="bg-amber-600 text-white p-4 rounded-t-2xl">
+        <h2 class="text-xl font-bold font-serif">
+          {{ novoProduto.id ? 'Editar Produto' : 'Novo Produto' }}
+        </h2>
+      </div>
+
+      <!-- Corpo do Modal -->
+      <div class="p-6">
+        <div class="space-y-4">
+          <!-- Nome -->
+          <div>
+            <label class="block text-amber-800 font-semibold text-sm mb-2">Nome do Produto</label>
+            <input 
+              type="text" 
+              [(ngModel)]="novoProduto.nome"
+              class="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none transition duration-200"
+              placeholder="Ex: Coca Cola"
+            >
+          </div>
+
+          <!-- Preço -->
+          <div>
+            <label class="block text-amber-800 font-semibold text-sm mb-2">Preço (R$)</label>
+            <input 
+              type="number" 
+              [(ngModel)]="novoProduto.preco"
+              class="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none transition duration-200"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+            >
+          </div>
+
+          <!-- Botões -->
+          <div class="flex space-x-3 pt-4">
+            <button 
+              (click)="fecharModal()"
+              class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-xl transition duration-200"
+            >
+              Cancelar
+            </button>
+            <button 
+              (click)="novoProduto.id ? salvarEdicao() : adicionarProduto()"
+              class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-xl transition duration-200"
+            >
+              {{ novoProduto.id ? 'Salvar' : 'Adicionar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

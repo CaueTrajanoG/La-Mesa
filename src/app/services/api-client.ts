@@ -5,15 +5,13 @@ import { catchError } from 'rxjs/operators';
 
 export interface Product {
   id?: number;
-  name?: string;
-  price?: number;
   quantity: number;
 }
+
 export interface Order {
   id?: number;
   numero: number;
-  products: Product[];
-  notes?: string;
+  products: Product[]
 }
 
 @Injectable({
@@ -57,6 +55,7 @@ export class ApiClient {
   postOrder(order: Order){
     delete order.id; 
     // removendo id para criar no banco com autoincrement
+    console.log(order)
     return this.apiClient.post(this._apiUrl, order, {
         headers: this.headers()
       }).pipe(
