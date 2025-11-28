@@ -12,25 +12,19 @@
         
         
         <nav class="flex space-x-6">
-          <a 
-            href="/home" 
+           <a 
+            [routerLink]="['/home']" 
             class="text-amber-100 hover:text-white px-4 py-3 rounded-lg text-sm font-medium transition duration-200 hover:bg-amber-800"
             [class.bg-amber-800]="currentPage === 'home'"
             [class.text-white]="currentPage === 'home'"
           >
-            <i class="mr-2"></i> Home
+            Home
           </a>
           <a 
-            href="/produtos" 
+            [routerLink]="['/relatorio']" 
             class="text-amber-100 hover:text-white px-4 py-3 rounded-lg text-sm font-medium transition duration-200 hover:bg-amber-800"
           >
-            <i class="mr-2"></i> Produtos
-          </a>
-          <a 
-            href="/relatorio" 
-            class="text-amber-100 hover:text-white px-4 py-3 rounded-lg text-sm font-medium transition duration-200 hover:bg-amber-800"
-          >
-            <i class="mr-2"></i> Relatório
+            Relatório
           </a>
         </nav>
       </div>

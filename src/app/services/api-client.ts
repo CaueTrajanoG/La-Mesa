@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export interface Product {
   id?: number;
@@ -44,6 +45,19 @@ export class ApiClient {
         catchError(this.handleError)
       )
   }
+
+  //busca apenas 1 comanda
+  getOrder(numero: number): Observable<Order>{
+    const newUrl = `${this._apiUrl}?numero=eq.${numero}&limit=1`;
+    return this.apiClient.get<Order[]>(newUrl,
+      {
+        headers: this.headers()
+      }).pipe(
+        map(res => res[0]),
+        catchError(this.handleError)
+      )
+  }
+
   getProducts(): Observable<Product[]>{
     return this.apiClient.get<Product[]>(this.productURL,
       {
@@ -66,6 +80,15 @@ export class ApiClient {
   //PATCH
   pathOrder(){
 
+  }
+  //Delete
+  deleteOrder(id:number){
+    const newUrl = `${this._apiUrl}?numero=eq.${id}`;
+    return this.apiClient.delete<Order[]>(newUrl, {
+      headers: this.headers()
+    }).pipe(
+      catchError(this.handleError)
+    )
   }
 
   //Tratando erros

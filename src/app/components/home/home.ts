@@ -55,7 +55,6 @@ export class HomeComponent {
 
   ngOnInit(){
     this.loadOrders()
-    this.loadProducts()
   }
 
   criaComanda(numeroComanda:number, meusProdutos:any){
@@ -77,7 +76,8 @@ export class HomeComponent {
     total: this.newCalcularTotal(lista_produtos)
   };
     this.comandas.push(comandaData);
-  }  
+  }
+    
 
   newCalcularTotal(lista:{ [key: number]: number } = {}) {
     this.total = 0;
@@ -90,17 +90,7 @@ export class HomeComponent {
     return this.total;
   }
 
-
-  //carrega os produtos cadastrados no database
-  loadProducts(){
-     this.data.getProducts().subscribe({
-      next: (products) => {
-        this.allProducts.set(products);
-      },
-      error: (err) => console.error('Erro ao carregar produtos:', err)            
-    }) 
-  }
-
+ 
   loadOrders() {
     this.data.getOrders().subscribe({
       next: (orders) => {
@@ -108,6 +98,17 @@ export class HomeComponent {
         for (const n of this.allOrders()) {
           this.criaComanda(n.numero, n.products);
         }
+        this.loadOrder(3)
+      },
+      error: (err) => console.error('Erro ao carregar orders:', err)      
+    });
+  }
+
+
+  loadOrder(numero: number) {
+    this.data.getOrder(numero).subscribe({
+      next: (order) => {               
+        console.log(order.products); 
       },
       error: (err) => console.error('Erro ao carregar orders:', err)      
     });
@@ -220,11 +221,13 @@ export class HomeComponent {
   }
 
   gerarPagamento() {
-    if (this.comandaParaPagamento) {
-      
-      this.comandas = this.comandas.filter(c => c.numero !== this.comandaParaPagamento!.numero);
-      alert(`Pagamento gerado para comanda ${this.comandaParaPagamento.numero}! Total: R$ ${this.comandaParaPagamento.total.toFixed(2)}`);
+    if (this.comandaParaPagamento) {      
+      console.log(this.comandaParaPagamento.numero)
+      this.data.deleteOrder(this.comandaParaPagamento.numero).subscribe();
+      //this.comandas = this.comandas.filter(c => c.numero !== this.comandaParaPagamento!.numero);
+      //alert(`Pagamento gerado para comanda ${this.comandaParaPagamento.numero}! Total: R$ ${this.comandaParaPagamento.total.toFixed(2)}`);
       this.fecharModalPagamento();
+      window.location.reload();
     }
   }
 

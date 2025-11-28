@@ -6,6 +6,12 @@ GET {{ endpoint }}
 apikey: {{ apiKey }}
 Authorization: Bearer {{ apiKey }}
 
+### GET
+GET {{ endpoint }}?numero=eq.3
+apikey: {{ apiKey }}
+Authorization: Bearer {{ apiKey }}
+
+
 ### POST
 POST {{ endpoint }}
 apikey: {{ apiKey }}
@@ -21,17 +27,17 @@ Content-Type: application/json
 }
 
 ### PATCH
-PATCH {{ endpoint }}?id=eq.24
+PATCH {{ endpoint }}?numero=eq.3
 apikey: {{ apiKey }}
 Authorization: Bearer {{ apiKey }}
 Content-Type: application/json
 
 {
-    "status": "todo"
+    "aberta": "FALSE"
 }
 
 ### DELETE
-DELETE {{ endpoint }}?id=eq.9
+DELETE {{ endpoint }}?numero=eq.1
 apikey: {{ apiKey }}
 Authorization: Bearer {{ apiKey }}
 
