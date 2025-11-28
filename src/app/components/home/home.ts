@@ -56,6 +56,7 @@ export class HomeComponent {
   ngOnInit(){
     this.loadOrders()
     this.loadProducts()
+    this.carregarComandasPagas()
   }
 
   criaComanda(numeroComanda:number, meusProdutos:any){
@@ -220,10 +221,29 @@ export class HomeComponent {
 
   gerarPagamento() {
     if (this.comandaParaPagamento) {
-      
-      this.comandas = this.comandas.filter(c => c.numero !== this.comandaParaPagamento!.numero);
+      this.comandasPagas.push(this.comandaParaPagamento);
+
+      this.comandas = this.comandas.filter(c => c.numero !== this.comandaParaPagamento!.numero);  
+      this.salvarComandasPagas();
       alert(`Pagamento gerado para comanda ${this.comandaParaPagamento.numero}! Total: R$ ${this.comandaParaPagamento.total.toFixed(2)}`);
-      this.fecharModalPagamento();
+    this.fecharModalPagamento();
+
+    }
+  }
+
+
+  // tem q criar uma tabelinha no supabase para salvar as comandas
+
+comandasPagas: Comanda[] = [];
+
+  salvarComandasPagas() {
+    localStorage.setItem('la-mesa-comandas-pagas', JSON.stringify(this.comandasPagas));
+  }
+
+  carregarComandasPagas() {
+    const comandasPagasSalvas = localStorage.getItem('la-mesa-comandas-pagas');
+    if (comandasPagasSalvas) {
+      this.comandasPagas = JSON.parse(comandasPagasSalvas);
     }
   }
 

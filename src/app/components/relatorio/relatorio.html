@@ -1,0 +1,95 @@
+<div class="min-h-screen bg-amber-50">
+  
+  <header class="bg-amber-900 shadow-lg border-b-4 border-amber-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex-shrink-0">
+          <h1 class="text-3xl font-bold text-amber-100 font-serif">La Mesa</h1>
+          <p class="text-amber-200 text-sm mt-1">Relatório de Vendas</p>
+        </div>
+        
+        <nav class="flex space-x-6">
+  <a 
+    [routerLink]="['/home']" 
+    class="text-amber-100 hover:text-white px-4 py-3 rounded-lg text-sm font-medium transition duration-200 hover:bg-amber-800"
+  >
+    Voltar para Home
+  </a>
+</nav>
+      </div>
+    </div>
+  </header>
+
+  
+  <main class="max-w-7xl mx-auto py-8 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      
+     
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-amber-900 mb-4 font-serif">
+          Relatório de Vendas
+        </h2>
+        <p class="text-amber-700 text-lg">
+          Comandas pagas
+        </p>
+      </div>
+
+      <!-- Estatísticas -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-amber-200 text-center">
+          <div class="text-2xl font-bold text-amber-700">{{ comandasPagas.length }}</div>
+          <div class="text-amber-600 text-sm">Total de Comandas</div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-amber-200 text-center">
+          <div class="text-2xl font-bold text-amber-700">R$ {{ getTotalVendas().toFixed(2) }}</div>
+          <div class="text-amber-600 text-sm">Faturamento Total</div>
+        </div>
+        
+      </div>
+
+      <!-- a lista de Comandas Pagas -->
+      <div class="space-y-4">
+        <div *ngFor="let comanda of comandasPagas" 
+             class="bg-white rounded-2xl shadow-lg border-2 border-green-200 p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="text-xl font-bold text-amber-800 font-serif">
+                Comanda {{ comanda.numero.toString().padStart(2, '0') }}
+              </h3>
+              <p class="text-green-600 text-sm font-semibold">PAGA</p>
+            </div>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+              R$ {{ comanda.total.toFixed(2) }}
+            </span>
+          </div>
+
+          <!-- produtos -->
+          <div class="mb-4">
+            <p class="text-amber-700 text-sm mb-2 font-semibold">Itens:</p>
+            <p class="text-amber-600 text-sm">{{ getProdutosTexto(comanda.produtos) }}</p>
+          </div>
+
+          <!-- data da cmanda -->
+          <div class="text-gray-500 text-xs">
+            Paga em: {{ comanda.data_pagamento ? formatarData(comanda.data_pagamento) : getDataAtual() }}
+          </div>
+        </div>
+
+        <!-- meensagem quando não há comandas pagas -->
+        <div *ngIf="comandasPagas.length === 0" class="text-center py-12">
+          <div class="bg-white rounded-2xl shadow-lg p-12 border-2 border-amber-200">
+            <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span class="text-3xl text-amber-600">!</span>
+            </div>
+            <h3 class="text-2xl font-semibold text-amber-800 mb-3">
+              Nenhuma Comanda Paga
+            </h3>
+            <p class="text-amber-600">
+              As comandas pagas aparecerão aqui
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
