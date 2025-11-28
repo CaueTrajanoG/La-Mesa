@@ -26,11 +26,11 @@ export class ComandaComponent {
       if (quantidade > 0) {
         const produto = this.produtos.find(p => p.id === Number(produtoId));
         if (produto) {
-          itens.push(`${quantidade}x ${produto.nome}`);
+          itens.push(`${quantidade}x ${produto.nome} `);
         }
       }
     }
-    return itens.join(', ') || 'Nenhum produto';
+    return itens.join(' | ') || 'Nenhum produto';
   }
 
   editarComanda() {

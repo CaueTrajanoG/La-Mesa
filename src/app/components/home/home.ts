@@ -55,6 +55,8 @@ export class HomeComponent {
 
   ngOnInit(){
     this.loadOrders()
+    this.loadProducts()
+    this.carregarComandasPagas()
   }
 
   criaComanda(numeroComanda:number, meusProdutos:any){
@@ -76,8 +78,7 @@ export class HomeComponent {
     total: this.newCalcularTotal(lista_produtos)
   };
     this.comandas.push(comandaData);
-  }
-    
+  }  
 
   newCalcularTotal(lista:{ [key: number]: number } = {}) {
     this.total = 0;
@@ -90,7 +91,16 @@ export class HomeComponent {
     return this.total;
   }
 
- 
+  //carrega os produtos cadastrados no database
+  loadProducts(){
+     this.data.getProducts().subscribe({
+      next: (products) => {
+        this.allProducts.set(products);
+      },
+      error: (err) => console.error('Erro ao carregar produtos:', err)            
+    }) 
+  }
+
   loadOrders() {
     this.data.getOrders().subscribe({
       next: (orders) => {
@@ -103,7 +113,6 @@ export class HomeComponent {
       error: (err) => console.error('Erro ao carregar orders:', err)      
     });
   }
-
 
   loadOrder(numero: number) {
     this.data.getOrder(numero).subscribe({
@@ -221,13 +230,34 @@ export class HomeComponent {
   }
 
   gerarPagamento() {
-    if (this.comandaParaPagamento) {      
-      console.log(this.comandaParaPagamento.numero)
-      this.data.deleteOrder(this.comandaParaPagamento.numero).subscribe();
-      //this.comandas = this.comandas.filter(c => c.numero !== this.comandaParaPagamento!.numero);
-      //alert(`Pagamento gerado para comanda ${this.comandaParaPagamento.numero}! Total: R$ ${this.comandaParaPagamento.total.toFixed(2)}`);
+    if (this.comandaParaPagamento) {
+      this.comandasPagas.push(this.comandaParaPagamento);
+
+      this.comandas = this.comandas.filter(c => c.numero !== this.comandaParaPagamento!.numero);  
+      this.salvarComandasPagas();
+      alert(`Pagamento gerado para comanda ${this.comandaParaPagamento.numero}! Total: R$ ${this.comandaParaPagamento.total.toFixed(2)}`);
       this.fecharModalPagamento();
+      
+      //método que apaga a order no database após o pagamento
+      this.data.deleteOrder(this.comandaParaPagamento!.numero).subscribe();
       window.location.reload();
+
+    }
+  }
+
+
+  // tem q criar uma tabelinha no supabase para salvar as comandas
+
+comandasPagas: Comanda[] = [];
+
+  salvarComandasPagas() {
+    localStorage.setItem('la-mesa-comandas-pagas', JSON.stringify(this.comandasPagas));
+  }
+
+  carregarComandasPagas() {
+    const comandasPagasSalvas = localStorage.getItem('la-mesa-comandas-pagas');
+    if (comandasPagasSalvas) {
+      this.comandasPagas = JSON.parse(comandasPagasSalvas);
     }
   }
 
