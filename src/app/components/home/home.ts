@@ -194,7 +194,7 @@ export class HomeComponent {
       const index = this.comandas.findIndex(c => c.numero === this.comandaEditando!.numero);
       if (index === -1) {
         console.warn("Comanda não encontrada para editar!");
-        return;                      // ⬅ adicionamos esse return
+        return;         
       }
       this.comandas[index] = comandaData;
       console.log(comandaData.produtos)
