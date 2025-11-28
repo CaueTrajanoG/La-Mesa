@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
+import { Comanda } from '../components/comanda/comanda';
 
 export interface Product {
   id?: number;
@@ -68,17 +69,30 @@ export class ApiClient {
   postOrder(order: Order){
     delete order.id; 
     // removendo id para criar no banco com autoincrement
-    console.log(order)
     return this.apiClient.post(this._apiUrl, order, {
         headers: this.headers()
       }).pipe(
         catchError(this.handleError)
       )
   }
-  //PATCH
-  pathOrder(){
 
+  //PATCH
+  pathOrder(order: Order){
+    const numeroCmd = order.numero
+   
+    const newUrl = `${this._apiUrl}?numero=eq.${numeroCmd}`
+    return this.apiClient.patch(newUrl, 
+      {//body
+        products : order.products       
+      }
+      ,
+      {
+        headers: this.headers()
+      }).pipe(
+        catchError(this.handleError)
+      )  
   }
+
   //Delete
   deleteOrder(id:number){
     const newUrl = `${this._apiUrl}?numero=eq.${id}`;

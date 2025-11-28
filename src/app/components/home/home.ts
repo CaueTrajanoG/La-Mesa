@@ -116,8 +116,7 @@ export class HomeComponent {
 
   loadOrder(numero: number) {
     this.data.getOrder(numero).subscribe({
-      next: (order) => {               
-        console.log(order.products); 
+      next: (order) => {  
       },
       error: (err) => console.error('Erro ao carregar orders:', err)      
     });
@@ -166,7 +165,6 @@ export class HomeComponent {
       alert('Por favor, informe o número da comanda!');
       return;
     }
-
     
     const temProdutos = Object.values(this.novaComanda.produtos).some(quantidade => quantidade > 0);
     if (!temProdutos) {
@@ -180,12 +178,28 @@ export class HomeComponent {
       total: this.total
     };
 
-    if (this.comandaEditando) {
-      
+    const productsArray = Object.entries(this.novaComanda.produtos).map(([id, quantity]) => ({
+      id: Number(id),
+      quantity: quantity
+    }));
+
+    this.data.pathOrder({
+      numero: this.novaComanda.numero,
+      products: productsArray
+    }).subscribe();
+    
+    
+    
+    if (this.comandaEditando) {  
       const index = this.comandas.findIndex(c => c.numero === this.comandaEditando!.numero);
-      if (index !== -1) {
-        this.comandas[index] = comandaData;
+      if (index === -1) {
+        console.warn("Comanda não encontrada para editar!");
+        return;                      // ⬅ adicionamos esse return
       }
+      this.comandas[index] = comandaData;
+      console.log(comandaData.produtos)
+
+
     } else {
       
       const comandaExistente = this.comandas.find(c => c.numero === this.novaComanda.numero);
@@ -193,7 +207,6 @@ export class HomeComponent {
         alert('Já existe uma comanda com este número!');
         return;
       }
-
 
       const productsArray = Object.entries(this.novaComanda.produtos).map(([id, quantity]) => ({
         id: Number(id),
@@ -215,7 +228,6 @@ export class HomeComponent {
     this.comandaEditando = comanda;
     this.novaComanda.numero = comanda.numero;
     this.novaComanda.produtos = { ...comanda.produtos };
-    this.calcularTotal();
     this.modalAberto = true;
   }
 
