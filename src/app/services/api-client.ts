@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { Comanda } from '../components/comanda/comanda';
+import { environment } from '../../environments/environment.development';
 
 export interface Product {
   id?: number;
@@ -22,9 +23,9 @@ export interface Order {
 
 export class ApiClient {
   private apiClient = inject(HttpClient);
-  private readonly _apiUrl = 'https://lfvjoiwqvgvcvljfyngk.supabase.co/rest/v1/Orders'
+  private readonly _apiUrl = `{environment.apiUrl}/dashboard`
   private readonly productURL = 'https://lfvjoiwqvgvcvljfyngk.supabase.co/rest/v1/Products'
-  private readonly _apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmdmpvaXdxdmd2Y3ZsamZ5bmdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4Mzk5MjMsImV4cCI6MjA3OTQxNTkyM30.eaPFsTY7GtBB0i3tqlNKP8u_atngnKsL_PyfY7e5BVw'
+  private readonly _apiKey =  `{environment.apiKey}`
   
   private headers(){
     return{

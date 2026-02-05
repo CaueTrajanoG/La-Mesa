@@ -31,7 +31,6 @@ PATCH {{ endpoint }}?numero=eq.3
 apikey: {{ apiKey }}
 Authorization: Bearer {{ apiKey }}
 Content-Type: application/json
-
 {
     "aberta": "FALSE"
 }
