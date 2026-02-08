@@ -1,38 +1,42 @@
-@endpoint = https://lfvjoiwqvgvcvljfyngk.supabase.co/rest/v1/Orders
+@endpoint = http://localhost:8080/dashboard
 @apiKey = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmdmpvaXdxdmd2Y3ZsamZ5bmdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4Mzk5MjMsImV4cCI6MjA3OTQxNTkyM30.eaPFsTY7GtBB0i3tqlNKP8u_atngnKsL_PyfY7e5BVw
 
 ### GET
-GET {{ endpoint }}
-apikey: {{ apiKey }}
-Authorization: Bearer {{ apiKey }}
+GET http://localhost:8080/dashboard/all
 
-### GET
-GET {{ endpoint }}?numero=eq.3
-apikey: {{ apiKey }}
-Authorization: Bearer {{ apiKey }}
+
+### GET by id
+GET http://localhost:8080/dashboard/89
+
 
 
 ### POST
 POST {{ endpoint }}
-apikey: {{ apiKey }}
-Authorization: Bearer {{ apiKey }}
 Content-Type: application/json
 
 {
-    "numero": 3,
-    "products": [{
-        "id":1,
-        "quantity":3 
-        }]
+  "numero": 89,
+  "produtos": [
+    { "id": 1, "quantity": 1 },
+    { "id": 3, "quantity": 2 }
+  ]
 }
 
 ### PATCH
-PATCH {{ endpoint }}?numero=eq.3
-apikey: {{ apiKey }}
-Authorization: Bearer {{ apiKey }}
+PATCH http://localhost:8080/dashboard/31
 Content-Type: application/json
+
 {
-    "aberta": "FALSE"
+  "aberta": "FALSE"
+}
+
+### PUT
+PUT http://localhost:8080/dashboard/34
+Content-Type: application/json
+
+{
+  "numero": 20,
+  "produtos": []
 }
 
 ### DELETE

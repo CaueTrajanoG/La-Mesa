@@ -1,12 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { Comanda } from '../components/comanda/comanda';
 import { environment } from '../../environments/environment.development';
 
-export interface Product {
+
+export interface Produto {
   id?: number;
   quantity: number;
 }
@@ -14,7 +15,7 @@ export interface Product {
 export interface Order {
   id?: number;
   numero: number;
-  products: Product[]
+  produtos: Produto[]
 }
 
 @Injectable({
@@ -23,45 +24,25 @@ export interface Order {
 
 export class ApiClient {
   private apiClient = inject(HttpClient);
-  private readonly _apiUrl = `{environment.apiUrl}/dashboard`
-  private readonly productURL = 'https://lfvjoiwqvgvcvljfyngk.supabase.co/rest/v1/Products'
-  private readonly _apiKey =  `{environment.apiKey}`
-  
-  private headers(){
-    return{
-      apikey: this._apiKey,
-      Authorization: `Bearer ${this._apiKey}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation'
-    }
-  }
+  private readonly _apiUrl = 'http://localhost:8080/dashboard/all';
+  private productURL = `http://localhost:8080/dashboard/all`;
 
   //GEt
   getOrders(): Observable<Order[]>{
-    return this.apiClient.get<Order[]>(this._apiUrl,
-      {
-        headers: this.headers()
-      }).pipe(
-        catchError(this.handleError)
-      )
+    return this.apiClient.get<Order[]>(this._apiUrl);
   }
+  
   //busca apenas 1 comanda
   getOrder(numero: number): Observable<Order>{
     const newUrl = `${this._apiUrl}?numero=eq.${numero}&limit=1`;
-    return this.apiClient.get<Order[]>(newUrl,
-      {
-        headers: this.headers()
-      }).pipe(
+    return this.apiClient.get<Order[]>(newUrl).pipe(
         map(res => res[0]),
         catchError(this.handleError)
       )
   }
 
-  getProducts(): Observable<Product[]>{
-    return this.apiClient.get<Product[]>(this.productURL,
-      {
-        headers: this.headers()
-      }).pipe(
+  getProducts(): Observable<Produto[]>{
+    return this.apiClient.get<Produto[]>(this.productURL).pipe(
         catchError(this.handleError)
       )
   }
@@ -70,9 +51,7 @@ export class ApiClient {
   postOrder(order: Order){
     delete order.id; 
     // removendo id para criar no banco com autoincrement
-    return this.apiClient.post(this._apiUrl, order, {
-        headers: this.headers()
-      }).pipe(
+    return this.apiClient.post(this._apiUrl, order).pipe(
         catchError(this.handleError)
       )
   }
@@ -84,11 +63,7 @@ export class ApiClient {
     const newUrl = `${this._apiUrl}?numero=eq.${numeroCmd}`
     return this.apiClient.patch(newUrl, 
       {//body
-        products : order.products       
-      }
-      ,
-      {
-        headers: this.headers()
+        products : order.produtos   
       }).pipe(
         catchError(this.handleError)
       )  
@@ -97,9 +72,7 @@ export class ApiClient {
   //Delete
   deleteOrder(id:number){
     const newUrl = `${this._apiUrl}?numero=eq.${id}`;
-    return this.apiClient.delete<Order[]>(newUrl, {
-      headers: this.headers()
-    }).pipe(
+    return this.apiClient.delete<Order[]>(newUrl).pipe(
       catchError(this.handleError)
     )
   }

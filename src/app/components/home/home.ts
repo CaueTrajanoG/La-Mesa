@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ComandaComponent, Comanda } from '../comanda/comanda';
 import { inject, signal } from '@angular/core';
-import { ApiClient, Order, Product } from '../../services/api-client';
+import { ApiClient, Order } from '../../services/api-client';
 
 
 interface Produto {
@@ -12,7 +12,6 @@ interface Produto {
   nome: string;
   preco: number;
 }
-
 
 @Component({
   selector: 'app-home',
@@ -32,7 +31,7 @@ export class HomeComponent {
   protected data = inject(ApiClient);
   //contém todas as comandas abertas
   allOrders = signal<Order[]>([]); 
-  allProducts = signal<Product[]>([]); 
+  allProducts = signal<Produto[]>([]); 
   
   produtos: Produto[] = [
   { id: 1, nome: 'Coca Cola', preco: 8.00 },
@@ -49,14 +48,15 @@ export class HomeComponent {
   comandas: Comanda[] = [];
   comandaParaPagamento: Comanda | null = null;
 
+
   setActivePage(page: string) {
     this.currentPage = page;
   }
 
   ngOnInit(){
     this.loadOrders()
-    this.loadProducts()
-    this.carregarComandasPagas()
+    //this.loadProducts()
+    //this.carregarComandasPagas()
   }
 
   criaComanda(numeroComanda:number, meusProdutos:any){
@@ -95,7 +95,7 @@ export class HomeComponent {
   loadProducts(){
      this.data.getProducts().subscribe({
       next: (products) => {
-        this.allProducts.set(products);
+        this.allProducts.set(this.produtos);
       },
       error: (err) => console.error('Erro ao carregar produtos:', err)            
     }) 
@@ -104,9 +104,10 @@ export class HomeComponent {
   loadOrders() {
     this.data.getOrders().subscribe({
       next: (orders) => {
+        console.log('Orders recebidas no componente:', orders);
         this.allOrders.set(orders);        
         for (const n of this.allOrders()) {
-          this.criaComanda(n.numero, n.products);
+          this.criaComanda(n.numero, n.produtos);
         }
         this.loadOrder(3)
       },
@@ -185,7 +186,7 @@ export class HomeComponent {
 
     this.data.pathOrder({
       numero: this.novaComanda.numero,
-      products: productsArray
+      produtos: productsArray
     }).subscribe();
     
     
@@ -215,7 +216,7 @@ export class HomeComponent {
 
       let newOrder: Order = {
         numero: this.novaComanda.numero,
-        products: productsArray,
+        produtos: productsArray,
       };
       this.data.postOrder(newOrder).subscribe();
     }
@@ -256,7 +257,6 @@ export class HomeComponent {
 
     }
   }
-
 
   // tem q criar uma tabelinha no supabase para salvar as comandas
 
