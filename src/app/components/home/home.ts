@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ComandaComponent, Comanda } from '../comanda/comanda';
-import { inject, signal } from '@angular/core';
-import { ApiClient, Order } from '../../services/api-client';
-
+import { RouterModule } from '@angular/router';
+import { ComandaComponent } from '../comanda/comanda';
 
 interface Produto {
   id: number;
@@ -13,222 +10,98 @@ interface Produto {
   preco: number;
 }
 
+interface Comanda {
+  numero: number;
+  produtos: { [produtoId: number]: number };
+  total: number;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ComandaComponent],
   templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    ComandaComponent
+  ]
 })
-
 export class HomeComponent {
-  currentPage: string = 'home';
-  modalAberto: boolean = false;
-  modalPagamentoAberto: boolean = false;
-  total: number = 0;
-  comandaEditando: Comanda | null = null;
+  currentPage = 'home';
 
-  protected data = inject(ApiClient);
-  //contém todas as comandas abertas
-  allOrders = signal<Order[]>([]); 
-  allProducts = signal<Produto[]>([]); 
-  
   produtos: Produto[] = [
-  { id: 1, nome: 'Coca Cola', preco: 8.00 },
-  { id: 2, nome: 'Batata Frita', preco: 12.00 },
-  { id: 3, nome: 'Hot dog', preco: 12.00 },
-  { id: 4, nome: 'Pizza', preco: 30.00 }
-];
-
-  novaComanda = {
-    numero: null as number | null,
-    produtos: {} as { [key: number]: number } 
-  };
+    { id: 1, nome: 'Hambúrguer', preco: 25 },
+    { id: 2, nome: 'Batata Frita', preco: 12 },
+    { id: 3, nome: 'Refrigerante', preco: 8 },
+  ];
 
   comandas: Comanda[] = [];
+
+  modalAberto = false;
+  modalPagamentoAberto = false;
+
+  comandaEditando: Comanda | null = null;
   comandaParaPagamento: Comanda | null = null;
 
+  novaComanda: Comanda = this.criarComandaVazia();
 
-  setActivePage(page: string) {
-    this.currentPage = page;
-  }
-
-  ngOnInit(){
-    this.loadOrders()
-    this.loadProducts()
-    this.carregarComandasPagas()
-  }
-
-  criaComanda(numeroComanda:number, meusProdutos:any){
-    const newID:number = 0;
-    const quantidade:number = 0;
-    const valor:number = 0
-
-    const lista_produtos: { [key: number]: number } = {};
-    
-    for (const n of meusProdutos) {
-      const newID:number = n.id;
-      const quantidade:number = n.quantity;
-      lista_produtos[newID] = quantidade;
-    }
-
-    const comandaData: Comanda = {
-    numero: numeroComanda,
-    produtos: lista_produtos,
-    total: this.newCalcularTotal(lista_produtos)
-  };
-    this.comandas.push(comandaData);
-  }  
-
-  newCalcularTotal(lista:{ [key: number]: number } = {}) {
-    this.total = 0;
-    for (const [produtoId, quantidade] of Object.entries(lista)) {
-      const produto = this.produtos.find(p => p.id === Number(produtoId));
-      if (produto && quantidade > 0) {
-        this.total += produto.preco * quantidade;
-      }
-    }
-    return this.total;
-  }
-
-  //carrega os produtos cadastrados no database
-  loadProducts(){
-     this.data.getProducts().subscribe({
-      next: (products) => {
-        this.allProducts.set(this.produtos);
-      },
-      error: (err) => console.error('Erro ao carregar produtos:', err)            
-    }) 
-  }
-
-  loadOrders() {
-    this.data.getOrders().subscribe({
-      next: (orders) => {
-        console.log('Orders recebidas no componente:', orders);
-        this.allOrders.set(orders);        
-        for (const n of this.allOrders()) {
-          this.criaComanda(n.numero, n.produtos);
-        }
-        this.loadOrder(3)
-      },
-      error: (err) => console.error('Erro ao carregar orders:', err)      
-    });
-  }
-
-  loadOrder(numero: number) {
-    this.data.getOrder(numero).subscribe({
-      next: (order) => {  
-      },
-      error: (err) => console.error('Erro ao carregar orders:', err)      
-    });
+  criarComandaVazia(): Comanda {
+    return { numero: 0, produtos: {}, total: 0 };
   }
 
   abrirModal() {
     this.comandaEditando = null;
-    this.limparFormulario();
+    this.novaComanda = this.criarComandaVazia();
     this.modalAberto = true;
   }
-  
+
   fecharModal() {
     this.modalAberto = false;
-    this.limparFormulario();
-    this.comandaEditando = null;
   }
 
-
   aumentarQuantidade(produtoId: number) {
-    if (!this.novaComanda.produtos[produtoId]) {
-      this.novaComanda.produtos[produtoId] = 0;
-    }
-    this.novaComanda.produtos[produtoId]++;
+    this.novaComanda.produtos[produtoId] =
+      (this.novaComanda.produtos[produtoId] || 0) + 1;
     this.calcularTotal();
   }
 
   diminuirQuantidade(produtoId: number) {
-    if (this.novaComanda.produtos[produtoId] && this.novaComanda.produtos[produtoId] > 0) {
-      this.novaComanda.produtos[produtoId]--;
-      this.calcularTotal();
+    if (!this.novaComanda.produtos[produtoId]) return;
+
+    this.novaComanda.produtos[produtoId]--;
+    if (this.novaComanda.produtos[produtoId] === 0) {
+      delete this.novaComanda.produtos[produtoId];
     }
+    this.calcularTotal();
   }
 
   calcularTotal() {
-    this.total = 0;
-    for (const [produtoId, quantidade] of Object.entries(this.novaComanda.produtos)) {
-      const produto = this.produtos.find(p => p.id === Number(produtoId));
-      if (produto && quantidade > 0) {
-        this.total += produto.preco * quantidade;
-      }
+    let total = 0;
+    for (const id in this.novaComanda.produtos) {
+      const produto = this.produtos.find(p => p.id === +id);
+      const qtd = this.novaComanda.produtos[+id];
+      if (produto) total += produto.preco * qtd;
     }
+    this.novaComanda.total = total;
+  }
+
+  get total() {
+    return this.novaComanda.total;
   }
 
   salvarComanda() {
-    if (!this.novaComanda.numero) {
-      alert('Por favor, informe o número da comanda!');
-      return;
-    }
-    
-    const temProdutos = Object.values(this.novaComanda.produtos).some(quantidade => quantidade > 0);
-    if (!temProdutos) {
-      alert('Por favor, selecione pelo menos um produto!');
-      return;
-    }
-
-    const comandaData: Comanda = {
-      numero: this.novaComanda.numero,
-      produtos: { ...this.novaComanda.produtos },
-      total: this.total
-    };
-
-    const productsArray = Object.entries(this.novaComanda.produtos).map(([id, quantity]) => ({
-      id: Number(id),
-      quantity: quantity
-    }));
-
-    this.data.pathOrder({
-      numero: this.novaComanda.numero,
-      produtos: productsArray
-    }).subscribe();
-    
-    
-    
-    if (this.comandaEditando) {  
-      const index = this.comandas.findIndex(c => c.numero === this.comandaEditando!.numero);
-      if (index === -1) {
-        console.warn("Comanda não encontrada para editar!");
-        return;         
-      }
-      this.comandas[index] = comandaData;
-      console.log(comandaData.produtos)
-
-
+    if (this.comandaEditando) {
+      Object.assign(this.comandaEditando, this.novaComanda);
     } else {
-      
-      const comandaExistente = this.comandas.find(c => c.numero === this.novaComanda.numero);
-      if (comandaExistente) {
-        alert('Já existe uma comanda com este número!');
-        return;
-      }
-
-      const productsArray = Object.entries(this.novaComanda.produtos).map(([id, quantity]) => ({
-        id: Number(id),
-        quantity: quantity
-      }));
-
-      let newOrder: Order = {
-        numero: this.novaComanda.numero,
-        produtos: productsArray,
-      };
-      this.data.postOrder(newOrder).subscribe();
+      this.comandas.push({ ...this.novaComanda });
     }
-    
     this.fecharModal();
-    window.location.reload();
   }
 
   editarComanda(comanda: Comanda) {
     this.comandaEditando = comanda;
-    this.novaComanda.numero = comanda.numero;
-    this.novaComanda.produtos = { ...comanda.produtos };
+    this.novaComanda = JSON.parse(JSON.stringify(comanda));
     this.modalAberto = true;
   }
 
@@ -243,71 +116,19 @@ export class HomeComponent {
   }
 
   gerarPagamento() {
-    if (this.comandaParaPagamento) {
-      this.comandasPagas.push(this.comandaParaPagamento);
-
-      this.comandas = this.comandas.filter(c => c.numero !== this.comandaParaPagamento!.numero);  
-      this.salvarComandasPagas();
-      alert(`Pagamento gerado para comanda ${this.comandaParaPagamento.numero}! Total: R$ ${this.comandaParaPagamento.total.toFixed(2)}`);
-      this.fecharModalPagamento();
-      
-      //método que apaga a order no database após o pagamento
-      this.data.deleteOrder(this.comandaParaPagamento!.numero).subscribe();
-      window.location.reload();
-
-    }
+    if (!this.comandaParaPagamento) return;
+    this.comandas = this.comandas.filter(c => c !== this.comandaParaPagamento);
+    this.fecharModalPagamento();
   }
 
-  // tem q criar uma tabelinha no supabase para salvar as comandas
-
-comandasPagas: Comanda[] = [];
-
-  salvarComandasPagas() {
-    localStorage.setItem('la-mesa-comandas-pagas', JSON.stringify(this.comandasPagas));
-  }
-
-  carregarComandasPagas() {
-    const comandasPagasSalvas = localStorage.getItem('la-mesa-comandas-pagas');
-    if (comandasPagasSalvas) {
-      this.comandasPagas = JSON.parse(comandasPagasSalvas);
-    }
-  }
-
-  limparFormulario() {
-    this.novaComanda = {
-      numero: null,
-      produtos: {}
-    };
-    this.total = 0;
-  }
-
-  getProdutoPorId(produtoId: number): Produto | undefined {
-    return this.produtos.find(p => p.id === produtoId);
-  }
-
-  getProdutosLista(produtos: { [key: number]: number }): string[] {
-    const itens: string[] = [];
-    for (const [produtoId, quantidade] of Object.entries(produtos)) {
-      if (quantidade > 0) {
-        const produto = this.getProdutoPorId(Number(produtoId));
-        if (produto) {
-          itens.push(`${quantidade}x ${produto.nome} - R$ ${(produto.preco * quantidade).toFixed(2)}`);
-        }
+  getProdutosLista(produtos: { [id: number]: number }): string[] {
+    const lista: string[] = [];
+    for (const id in produtos) {
+      const produto = this.produtos.find(p => p.id === +id);
+      if (produto) {
+        lista.push(`${produto.nome} x${produtos[+id]} - R$ ${(produto.preco * produtos[+id]).toFixed(2)}`);
       }
     }
-    return itens;
-  }
-
-  getProdutosTexto(produtos: { [key: number]: number }): string {
-    const itens: string[] = [];
-    for (const [produtoId, quantidade] of Object.entries(produtos)) {
-      if (quantidade > 0) {
-        const produto = this.getProdutoPorId(Number(produtoId));
-        if (produto) {
-          itens.push(`${quantidade}x ${produto.nome}`);
-        }
-      }
-    }
-    return itens.join(', ') || 'Nenhum produto';
+    return lista;
   }
 }
