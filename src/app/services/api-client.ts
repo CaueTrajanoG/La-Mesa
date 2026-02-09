@@ -24,15 +24,21 @@ export interface Order {
 
 export class ApiClient {
   private apiClient = inject(HttpClient);
-  private readonly _apiUrl = 'http://localhost:8080/dashboard/all';
-  private productURL = `http://localhost:8080/dashboard/all`;
+  private readonly _apiUrl = 'https://noncognizant-dorthey-unprepossessingly.ngrok-free.dev/dashboard/all';
+  private productURL = `https://noncognizant-dorthey-unprepossessingly.ngrok-free.dev/dashboard/all`;
 
   //GEt
   getOrders(): Observable<Order[]>{
-    return this.apiClient.get<Order[]>(this._apiUrl);
+    return this.apiClient.get<Order[]>(this._apiUrl,
+    {
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      }
+    }
+  );
   }
   
-  //busca apenas 1 comanda
+  //busca apenas 1 comandan
   getOrder(numero: number): Observable<Order>{
     const newUrl = `${this._apiUrl}?numero=eq.${numero}&limit=1`;
     return this.apiClient.get<Order[]>(newUrl).pipe(
@@ -51,7 +57,12 @@ export class ApiClient {
   postOrder(order: Order){
     delete order.id; 
     // removendo id para criar no banco com autoincrement
-    return this.apiClient.post(this._apiUrl, order).pipe(
+    return this.apiClient.post(this._apiUrl,
+       order,{
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      }
+    }).pipe(
         catchError(this.handleError)
       )
   }

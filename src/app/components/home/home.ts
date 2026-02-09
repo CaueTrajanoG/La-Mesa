@@ -55,8 +55,8 @@ export class HomeComponent {
 
   ngOnInit(){
     this.loadOrders()
-    //this.loadProducts()
-    //this.carregarComandasPagas()
+    this.loadProducts()
+    this.carregarComandasPagas()
   }
 
   criaComanda(numeroComanda:number, meusProdutos:any){
